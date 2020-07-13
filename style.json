@@ -1,0 +1,331 @@
+{
+    "version": 8,
+    "name": "Blank",
+    "metadata": {
+        "mapbox:autocomposite": true,
+        "mapbox:type": "template",
+        "mapbox:sdk-support": {
+            "js": "1.9.0",
+            "android": "8.6.0",
+            "ios": "5.6.0"
+        },
+        "mapbox:groups": {
+            "Terrain, land": {"name": "Terrain, land"},
+            "Satellite imagery, land": {"name": "Satellite imagery, land"},
+            "Terrain, surface": {"name": "Terrain, surface"},
+            "Buildings, extruded": {"name": "Buildings, extruded"},
+            "Terrain, terrain-labels": {"name": "Terrain, terrain-labels"},
+            "Buildings, building-labels": {
+                "name": "Buildings, building-labels"
+            },
+            "Buildings, built": {"name": "Buildings, built"}
+        },
+        "mapbox:uiParadigm": "layers",
+        "mapbox:decompiler": {
+            "id": "ckcktl85c00lo1jmfuugpx81y",
+            "componentVersion": "3.0.0",
+            "strata": [
+                {
+                    "id": "ckcktl85c00lo1jmfuugpx81y",
+                    "order": [
+                        ["terrain", "land"],
+                        ["buildings", "built"],
+                        ["satellite", "land"],
+                        ["terrain", "surface"],
+                        ["buildings", "extruded"],
+                        ["terrain", "terrain-labels"],
+                        ["buildings", "building-labels"],
+                        "mapbox-terrain-rgb"
+                    ]
+                }
+            ],
+            "components": {
+                "buildings": "3.0.0",
+                "terrain": "3.0.0",
+                "satellite": "3.0.0"
+            },
+            "propConfig": {
+                "buildings": {"3D": true},
+                "terrain": {"cliffs": true, "contours": true},
+                "satellite": {}
+            }
+        }
+    },
+    "center": [6.2410395, 51.8742355],
+    "zoom": 16,
+    "bearing": 0,
+    "pitch": 0,
+    "sources": {
+        "mapbox://mapbox.satellite": {
+            "url": "mapbox://mapbox.satellite",
+            "type": "raster",
+            "tileSize": 256
+        },
+        "mapbox://mapbox.terrain-rgb": {
+            "url": "mapbox://mapbox.terrain-rgb",
+            "type": "raster-dem",
+            "tileSize": 256
+        },
+        "composite": {
+            "url": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v8",
+            "type": "vector"
+        }
+    },
+    "sprite": "mapbox://sprites/elisamartinezfuentes/ckcktl85c00lo1jmfuugpx81y/0ke9otub26dvgli81phdx605p",
+    "glyphs": "mapbox://fonts/elisamartinezfuentes/{fontstack}/{range}.pbf",
+    "layers": [
+        {
+            "id": "hillshade",
+            "type": "fill",
+            "metadata": {
+                "mapbox:featureComponent": "terrain",
+                "mapbox:group": "Terrain, land"
+            },
+            "source": "composite",
+            "source-layer": "hillshade",
+            "maxzoom": 16,
+            "layout": {},
+            "paint": {
+                "fill-color": [
+                    "match",
+                    ["get", "class"],
+                    "shadow",
+                    "rgb(26, 26, 26)",
+                    "rgb(56, 56, 56)"
+                ],
+                "fill-opacity": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    14,
+                    [
+                        "match",
+                        ["get", "level"],
+                        [67, 56],
+                        0.06,
+                        [89, 78],
+                        0.03,
+                        0.04
+                    ],
+                    16,
+                    0
+                ],
+                "fill-antialias": false
+            }
+        },
+        {
+            "id": "contour-line",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "terrain",
+                "mapbox:group": "Terrain, land"
+            },
+            "source": "composite",
+            "source-layer": "contour",
+            "minzoom": 11,
+            "filter": ["!=", ["get", "index"], -1],
+            "layout": {},
+            "paint": {
+                "line-opacity": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    11,
+                    ["match", ["get", "index"], [1, 2], 0.15, 0.25],
+                    12,
+                    ["match", ["get", "index"], [1, 2], 0.3, 0.5]
+                ],
+                "line-color": "rgb(26, 26, 26)",
+                "line-width": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    13,
+                    ["match", ["get", "index"], [1, 2], 0.5, 0.6],
+                    16,
+                    ["match", ["get", "index"], [1, 2], 0.8, 1.2]
+                ],
+                "line-offset": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    13,
+                    ["match", ["get", "index"], [1, 2], 1, 0.6],
+                    16,
+                    ["match", ["get", "index"], [1, 2], 1.6, 1.2]
+                ]
+            }
+        },
+        {
+            "id": "background",
+            "type": "background",
+            "metadata": {
+                "mapbox:featureComponent": "satellite",
+                "mapbox:group": "Satellite imagery, land"
+            },
+            "layout": {},
+            "paint": {"background-color": "hsl(222, 56%, 4%)"}
+        },
+        {
+            "id": "satellite",
+            "type": "raster",
+            "metadata": {
+                "mapbox:featureComponent": "satellite",
+                "mapbox:group": "Satellite imagery, land"
+            },
+            "source": "mapbox://mapbox.satellite",
+            "layout": {},
+            "paint": {}
+        },
+        {
+            "id": "cliff",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "terrain",
+                "mapbox:group": "Terrain, surface"
+            },
+            "source": "composite",
+            "source-layer": "structure",
+            "minzoom": 15,
+            "filter": ["==", ["get", "class"], "cliff"],
+            "layout": {"line-cap": "round", "line-join": "round"},
+            "paint": {
+                "line-opacity": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    15,
+                    0,
+                    15.25,
+                    1
+                ],
+                "line-width": 10,
+                "line-pattern": "cliff"
+            }
+        },
+        {
+            "id": "building-extrusion",
+            "type": "fill-extrusion",
+            "metadata": {
+                "mapbox:featureComponent": "buildings",
+                "mapbox:group": "Buildings, extruded"
+            },
+            "source": "composite",
+            "source-layer": "building",
+            "minzoom": 15,
+            "filter": [
+                "all",
+                ["==", ["get", "underground"], "false"],
+                ["!=", ["get", "extrude"], "false"]
+            ],
+            "layout": {},
+            "paint": {
+                "fill-extrusion-color": "rgb(0, 0, 0)",
+                "fill-extrusion-height": ["get", "height"],
+                "fill-extrusion-opacity": 0.3
+            }
+        },
+        {
+            "id": "contour-label",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:featureComponent": "terrain",
+                "mapbox:group": "Terrain, terrain-labels"
+            },
+            "source": "composite",
+            "source-layer": "contour",
+            "minzoom": 11,
+            "filter": [
+                "any",
+                ["==", ["get", "index"], 10],
+                ["==", ["get", "index"], 5]
+            ],
+            "layout": {
+                "text-field": ["concat", ["get", "ele"], " m"],
+                "symbol-placement": "line",
+                "text-pitch-alignment": "viewport",
+                "text-max-angle": 25,
+                "text-padding": 5,
+                "text-font": ["DIN Pro Medium", "Arial Unicode MS Regular"],
+                "text-size": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    15,
+                    9.5,
+                    20,
+                    12
+                ]
+            },
+            "paint": {
+                "text-color": "rgb(0, 0, 0)",
+                "text-halo-width": 1,
+                "text-halo-color": "rgb(0, 0, 0)"
+            }
+        },
+        {
+            "id": "building-number-label",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:featureComponent": "buildings",
+                "mapbox:group": "Buildings, building-labels"
+            },
+            "source": "composite",
+            "source-layer": "housenum_label",
+            "minzoom": 17,
+            "layout": {
+                "text-field": ["get", "house_num"],
+                "text-font": ["DIN Pro Italic", "Arial Unicode MS Regular"],
+                "text-padding": 4,
+                "text-max-width": 7,
+                "text-size": 9.5
+            },
+            "paint": {
+                "text-color": "rgb(77, 77, 77)",
+                "text-halo-color": "rgb(46, 46, 46)",
+                "text-halo-width": 0.5
+            }
+        },
+        {
+            "id": "block-number-label",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:featureComponent": "buildings",
+                "mapbox:group": "Buildings, building-labels"
+            },
+            "source": "composite",
+            "source-layer": "place_label",
+            "minzoom": 16,
+            "filter": [
+                "all",
+                ["==", ["get", "class"], "settlement_subdivision"],
+                ["==", ["get", "type"], "block"]
+            ],
+            "layout": {
+                "text-field": ["get", "name"],
+                "text-font": ["DIN Pro Italic", "Arial Unicode MS Regular"],
+                "text-max-width": 7,
+                "text-size": 11
+            },
+            "paint": {
+                "text-color": "rgb(130, 130, 130)",
+                "text-halo-color": "rgb(0, 0, 0)",
+                "text-halo-width": 0.5,
+                "text-halo-blur": 0.5
+            }
+        },
+        {
+            "id": "mapbox-terrain-rgb",
+            "type": "hillshade",
+            "source": "mapbox://mapbox.terrain-rgb",
+            "layout": {},
+            "paint": {}
+        }
+    ],
+    "created": "2020-07-13T18:08:13.039Z",
+    "id": "ckcktl85c00lo1jmfuugpx81y",
+    "modified": "2020-07-13T18:41:44.242Z",
+    "owner": "elisamartinezfuentes",
+    "visibility": "public",
+    "draft": false
+}
